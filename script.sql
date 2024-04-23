@@ -30,6 +30,7 @@ BEGIN
     CLOSE cur_media;
 END;
 $$;
+-- 3. Identificação da descrição mais longa para os vinhos de cada país
 DO $$
 DECLARE
     cur_country CURSOR FOR
@@ -48,8 +49,8 @@ BEGIN
         ORDER BY LENGTH(description) DESC
         LIMIT 1;
 
-
-        RAISE NOTICE 'País: % - Descrição mais longa: %', country_name, longest_description;
+        INSERT INTO WineCursorResults (nome_pais, descricao_mais_longa)
+        VALUES (country_name, longest_description);
 
         FETCH NEXT FROM cur_country INTO country_name;
     END LOOP;
@@ -57,6 +58,12 @@ BEGIN
     CLOSE cur_country;
 END;
 $$;
+
+-- 4. Visualize os resultados na tabela WineCursorResults
+SELECT * FROM WineCursorResults;
+
+
+
 
 
 
