@@ -30,6 +30,35 @@ BEGIN
     CLOSE cur_media;
 END;
 $$;
+DO $$
+DECLARE
+    cur_country CURSOR FOR
+        SELECT DISTINCT country FROM winemag;
+    country_name VARCHAR(200);
+    longest_description VARCHAR;
+BEGIN
+    OPEN cur_country;
+
+    FETCH NEXT FROM cur_country INTO country_name;
+    WHILE FETCH_STATUS = 0 LOOP
+        
+        SELECT description INTO longest_description
+        FROM winemag
+        WHERE country = country_name
+        ORDER BY LENGTH(description) DESC
+        LIMIT 1;
+
+
+        RAISE NOTICE 'País: % - Descrição mais longa: %', country_name, longest_description;
+
+        FETCH NEXT FROM cur_country INTO country_name;
+    END LOOP;
+
+    CLOSE cur_country;
+END;
+$$;
+
+
 
 
 
